@@ -1,0 +1,35 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true
+    },
+    "extends": ["plugin:react/recommended", "prettier"],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
+    },
+    "plugins": ["react", "prettier"],
+    "rules": {
+        "quotes": ["error", "single"],
+        "semi": ["error", "never"],
+        "comma-dangle": ["error", "always-multiline"],
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "react/prop-types": 0,
+        "prettier/prettier": ["error"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

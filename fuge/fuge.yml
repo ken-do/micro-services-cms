@@ -1,0 +1,48 @@
+fuge_global:
+    dns_enabled: true
+    dns_host: 127.0.0.1
+    dns_port: 53053
+    dns_suffix: svc.cluster.local
+    dns_namespace: micro
+    tail: true
+    monitor: true
+    monitor_excludes:
+        - '**/node_modules/**'
+        - '**/.git/**'
+        - '*.log'
+# webapp:
+#   type: process
+#   path: ../webapp
+#   run: "npm start"
+#   ports:
+#     - main=3000
+graphqlservice:
+    type: process
+    path: ../graphqlservice
+    run: 'npm start'
+    ports:
+        - main=4000
+mongo:
+    image: mongo
+    type: container
+    ports:
+        - main=27017:27017
+postservice:
+    type: process
+    path: ../postservice
+    run: 'npm start'
+    ports:
+        - main=4003
+# auth:
+#   type: process
+#   path: ../authservice
+#   run: "npm start"
+#   ports:
+#     - main=4002
+# posts:
+#     type: process
+#     path: ../postservice
+#     run: "npm start"
+#     ports:
+#       - main=4004
+

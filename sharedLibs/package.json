@@ -1,5 +1,5 @@
 {
-  "name": "api-service",
+  "name": "resolverservice",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,9 @@
   "author": "Ken Do",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.10.1",
-    "graphql": "^14.6.0"
+    "axios": "^0.19.2",
+    "concordant": "^2.1.0",
+    "mongodb": "^2.2.33",
+    "restify-clients": "^2.6.9"
   }
 }

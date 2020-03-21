@@ -1,0 +1,19 @@
+{
+    "name": "api-service",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [],
+    "author": "Ken Do",
+    "license": "ISC",
+    "dependencies": {
+        "apollo-server": "^2.10.1",
+        "graphql": "^14.6.0"
+    },
+    "devDependencies": {
+        "prettier": "^1.19.1"
+    }
+}
