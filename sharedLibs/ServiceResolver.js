@@ -10,7 +10,7 @@ class ServiceResolver {
             auth: '_main._tcp.authservice.micro.svc.cluster.local',
             mongo: '_main._tcp.mongo.micro.svc.cluster.local',
         }
-        this.clients = { mongo: {} }
+        this.clients = {}
     }
 
     getRestClient(service) {
@@ -33,29 +33,23 @@ class ServiceResolver {
         })
     }
 
-    getMongoClient(collection) {
+    getMongoClient() {
         return new Promise((resolve, reject) => {
-            if (this.clients.mongo[collection] !== undefined) {
-                resolve(this.clients.mongo[collection])
+            if (this.clients.mongo !== undefined) {
+                resolve(this.clients.mongo)
             }
 
-            dns.resolve(this.domains['mongo'], (err, locs) => {
+            dns.resolve(this.domains.mongo, (err, locs) => {
                 if (err) {
                     next(err)
                     return
                 }
 
                 const { host, port } = locs[0]
-                const url = `mongodb://${host}:${port}/${collection}`
-                MongoClient.connect(url, (err, client) => {
-                    if (err) {
-                        reject('failed to connect to MongoDB')
-                        return
-                    }
-                    client.on('close', () => (client = null))
-                    this.clients.mongo[collection] = client
-                    resolve(client)
-                })
+                const url = `mongodb://${host}:${port}`
+                const client = new MongoClient(url)
+                this.clients.mongo = client
+                resolve(this.clients.mongo)
             })
         })
     }

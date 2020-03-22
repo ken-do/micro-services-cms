@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "concordant": "^2.1.0",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.5.5",
     "restify-clients": "^2.6.9"
   }
 }

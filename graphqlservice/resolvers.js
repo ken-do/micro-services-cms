@@ -13,7 +13,6 @@ const resolvers = {
     },
     Mutation: {
         createPost: async (_, args, { serviceResolver }) => {
-            const client = await serviceResolver.getRestClient('post')
             try {
                 const client = await serviceResolver.getRestClient('post')
                 const { data } = await client.post('/posts', args)

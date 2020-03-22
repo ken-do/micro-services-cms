@@ -4,51 +4,69 @@ const { v4: uuidv4 } = require('uuid')
 const serviceResolver = new ServiceResolver()
 
 function service() {
-    let db
+    let client
+    const dbName = 'post'
     setup()
 
     async function setup() {
         try {
-            const client = await serviceResolver.getMongoClient('post')
-            db = client
+            const mongoClient = await serviceResolver.getMongoClient()
+            client = mongoClient
         } catch (e) {
             console.log(e)
         }
     }
 
     function create(data, cb) {
-        if (!db) {
+        if (!client) {
             cb(Error('No database connection'))
             return
         }
 
-        const post = db.collection('post')
-
-        post.insert({ ...data, id: uuidv4() }, (err, result) => {
+        client.connect(err => {
             if (err) {
                 cb(err)
                 return
             }
-
-            cb(null, { post: result.ops[0] })
+            const db = client.db(dbName)
+            db.collection('post').insert(
+                { ...data, id: uuidv4() },
+                (err, result) => {
+                    if (err) {
+                        cb(err)
+                        return
+                    }
+                    client.close()
+                    cb(null, { post: result.ops[0] })
+                },
+            )
         })
     }
 
     function list(args, cb) {
-        if (!db) {
+        if (!client) {
             cb(Error('No database connection'))
             return
         }
 
-        const post = db.collection('post')
-        post.find({}, { limit: 10 }).toArray((err, docs) => {
+        client.connect(err => {
             if (err) {
                 cb(err)
                 return
             }
-            cb(null, {
-                posts: docs,
-            })
+            const db = client.db(dbName)
+            db.collection('post')
+                .find({}, { limit: 10 })
+                .toArray((err, posts) => {
+                    if (err) {
+                        cb(err)
+                        return
+                    }
+                    client.close()
+                    cb(null, {
+                        posts,
+                    })
+                })
         })
     }
 
