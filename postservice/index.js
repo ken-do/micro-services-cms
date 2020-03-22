@@ -1,3 +1,3 @@
 const wiring = require('./wiring')
-const PostService = require('./service')
+const PostService = require('./PostService')
 wiring(new PostService())
