@@ -3,74 +3,111 @@ const { v4: uuidv4 } = require('uuid')
 
 const serviceResolver = new ServiceResolver()
 
-function service() {
-    let client
-    const dbName = 'post'
-    setup()
+class PostService {
+    constructor() {
+        this.dbName = 'post'
+        this.setup()
+    }
 
-    async function setup() {
+    async setup() {
         try {
             const mongoClient = await serviceResolver.getMongoClient()
-            client = mongoClient
+            this.client = mongoClient
+            this.db = mongoClient.db(this.dbName)
         } catch (e) {
             console.log(e)
+            return null
         }
     }
 
-    function create(data, cb) {
-        if (!client) {
+    list(args, cb) {
+        if (!this.db) {
             cb(Error('No database connection'))
             return
         }
 
-        client.connect(err => {
-            if (err) {
-                cb(err)
-                return
-            }
-            const db = client.db(dbName)
-            db.collection('post').insert(
-                { ...data, id: uuidv4() },
-                (err, result) => {
-                    if (err) {
-                        cb(err)
-                        return
-                    }
-                    client.close()
-                    cb(null, { post: result.ops[0] })
-                },
-            )
-        })
-    }
-
-    function list(args, cb) {
-        if (!client) {
-            cb(Error('No database connection'))
-            return
-        }
-
-        client.connect(err => {
-            if (err) {
-                cb(err)
-                return
-            }
-            const db = client.db(dbName)
-            db.collection('post')
-                .find({}, { limit: 10 })
-                .toArray((err, posts) => {
-                    if (err) {
-                        cb(err)
-                        return
-                    }
-                    client.close()
-                    cb(null, {
-                        posts,
-                    })
+        this.db
+            .collection('post')
+            .find({}, { limit: args.limit || 10 })
+            .toArray((err, posts) => {
+                if (err) {
+                    cb(err)
+                    return
+                }
+                cb(null, {
+                    posts,
                 })
-        })
+            })
     }
 
-    return { create, list }
+    filter(args, cb) {
+        if (!this.db) {
+            cb(Error('No database connection'))
+            return
+        }
+
+        this.db
+            .collection('post')
+            .find(args, { limit: args.limit || 10 })
+            .toArray((err, posts) => {
+                if (err) {
+                    cb(err)
+                    return
+                }
+                cb(null, {
+                    posts,
+                })
+            })
+    }
+
+    create(args, cb) {
+        if (!this.db) {
+            cb(Error('No database connection'))
+            return
+        }
+
+        this.db
+            .collection('post')
+            .insert({ ...args, id: uuidv4() }, (err, result) => {
+                if (err) {
+                    cb(err)
+                    return
+                }
+                cb(null, { post: result.ops[0] })
+            })
+    }
+
+    update({ id, ...data }, cb) {
+        if (!this.db) {
+            cb(Error('No database connection'))
+            return
+        }
+
+        this.db
+            .collection('post')
+            .findOneAndUpdate({ id }, { $set: data }, (err, result) => {
+                if (err) {
+                    cb(err)
+                    return
+                }
+                cb(null, { post: { ...result.value, ...data } })
+            })
+    }
+
+    remove({ id }, cb) {
+        if (!this.db) {
+            cb(Error('No database connection'))
+            return
+        }
+
+        this.db.collection('post').deleteOne({ id }, (err, result) => {
+            if (err) {
+                cb(err)
+                return
+            }
+            cb(null, { post: { title: '', body: '' } })
+        })
+    }
 }
 
-module.exports = service
+module.exports = PostService

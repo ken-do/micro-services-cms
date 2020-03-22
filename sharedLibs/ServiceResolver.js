@@ -48,8 +48,14 @@ class ServiceResolver {
                 const { host, port } = locs[0]
                 const url = `mongodb://${host}:${port}`
                 const client = new MongoClient(url)
-                this.clients.mongo = client
-                resolve(this.clients.mongo)
+                client.connect(err => {
+                    if (err) {
+                        cb(err)
+                        return
+                    }
+                    this.clients.mongo = client
+                    resolve(this.clients.mongo)
+                })
             })
         })
     }

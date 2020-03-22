@@ -1,4 +1,5 @@
 const axios = require('axios')
+
 class RestClient {
     constructor({ baseUrl }) {
         this.baseUrl = baseUrl
@@ -25,7 +26,7 @@ class RestClient {
         return axios.patch(`${this.baseUrl}${path}`, ...args)
     }
 
-    delete(path, ...args) {
+    remove(path, ...args) {
         return axios.delete(`${this.baseUrl}${path}`, ...args)
     }
 }

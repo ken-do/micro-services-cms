@@ -26,12 +26,15 @@ const typeDefs = gql`
     # }
 
     type Query {
-        posts: [Post]
+        getPosts: [Post]
+        getPost(id: String): Post
         #users: [User]
     }
 
     type Mutation {
         createPost(userId: Int, title: String, body: String): Post
+        updatePost(id: ID!, userId: Int, title: String, body: String): Post
+        deletePost(id: ID!): Post
     }
 `
 module.exports = typeDefs
