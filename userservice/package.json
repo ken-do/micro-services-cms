@@ -1,0 +1,19 @@
+{
+  "name": "postservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Ken Do",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.5.5",
+    "restify": "^8.5.1",
+    "restify-cors-middleware": "^1.1.1",
+    "restify-plugins": "^1.6.0",
+    "uuid": "^7.0.2"
+  }
+}
